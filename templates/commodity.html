@@ -1,306 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Document</title>
-  <link rel="stylesheet" type="text/css" href="../pstatic/css/main.css">
-  <link rel="stylesheet" type="text/css" href="../pstatic/layui/css/layui.css">
-  <script type="text/javascript" src="../pstatic/layui/layui.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-</head>
-<body>
-  <div class="header">
-    <div class="headerLayout w1200">
-      <div class="headerCon">
-        <h1 class="mallLogo">
-          <a href="#" title="母婴商城">
-            <img src="../pstatic/img/logo.png">
-          </a>
-        </h1>
-        <div class="mallSearch">
-          <form action="" class="layui-form" novalidate>
-            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-            <input type="hidden" name="" value="">
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="content content-nav-base commodity-content">
-    <div class="main-nav">
-      <div class="inner-cont0">
-        <div class="inner-cont1 w1200">
-          <div class="inner-cont2">
-            <a href="index.html" class="active">首页</a>
-			<a href="commodity.html" >所有商品</a>
-			<a href="shopcart.html" >购物车</a>
-            <a href="shopper.html">个人中心</a>
-          </div>
-        </div>
-      </div>
-    </div>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
     <div class="commod-cont-wrap">
       <div class="commod-cont w1200 layui-clear">
         <div class="left-nav">
           <div class="title">所有分类</div>
           <div class="list-box">
+            {% for f in firsts %}
             <dl>
-             <dt>奶粉辅食</dt>
-             <dd><a href="javascript:;">进口奶粉</a></dd>
-             <dd><a href="javascript:;">宝宝辅食</a></dd>
-             <dd><a href="javascript:;">营养品</a></dd>
+             <dt>{{ f.firsts }}</dt>
+             {% for t in typesList %}
+                 {% if t.firsts == f.firsts %}
+                    <dd><a href="{% url 'commodity:commodity' %}?t={{ t.id }}&n={{ n }}">{{ t.seconds }}</a></dd>
+                 {% endif %}
+             {% endfor %}
             </dl>
-            <dl>
-             <dt>儿童用品</dt>
-             <dd><a href="javascript:;">纸尿裤</a></dd>
-             <dd><a href="javascript:;">婴儿湿巾</a></dd>
-             <dd><a href="javascript:;">婴儿车</a></dd>
-             <dd><a href="javascript:;">婴儿床</a></dd>
-             <dd><a href="javascript:;">儿童安全座椅</a></dd>
-            </dl>
-            <dl>
-             <dt>儿童早教</dt>
-             <dd><a href="javascript:;">儿童玩具</a></dd>
-             <dd><a href="javascript:;">早教书籍</a></dd>
-             <dd><a href="javascript:;">孕产育儿书</a></dd>
-            </dl>
-            <dl>
-             <dt>儿童服饰</dt>
-             <dd><a href="javascript:;">童装</a></dd>
-             <dd><a href="javascript:;">童鞋</a></dd>
-             <dd><a href="javascript:;">宝宝配饰</a></dd>
-            </dl>
-            <dl>
-             <dt>孕妈专区</dt>
-             <dd><a href="javascript:;">孕妇装</a></dd>
-             <dd><a href="javascript:;">孕妇护肤</a></dd>
-             <dd><a href="javascript:;">孕妇用品</a></dd>
-            </dl>
+            {% endfor %}
+
           </div>
         </div>
         <div class="right-cont-wrap">
           <div class="right-cont">
             <div class="sort layui-clear">
-              <a class="active" href="javascript:;" event = 'volume'>销量</a>
-              <a href="javascript:;" event = 'price'>价格</a>
-              <a href="javascript:;" event = 'newprod'>新品</a>
-              <a href="javascript:;" event = 'collection'>收藏</a>
+
+              <a {% if not s or s == 'sold' %}class="active" {% endif %} href="{% url 'commodity:commodity' %}?t={{ t }}&s=sold&n={{ n }}">销量</a>
+              <a {% if s == 'price' %}class="active" {% endif %} href="{% url 'commodity:commodity' %}?t={{ t }}&s=price&n={{ n }}">价格</a>
+              <a {% if s == 'created' %}class="active" {% endif %} href="{% url 'commodity:commodity' %}?t={{ t }}&s=created&n={{ n }}">新品</a>
+              <a {% if s == 'likes' %}class="active" {% endif %} href="{% url 'commodity:commodity' %}?t={{ t }}&s=likes&n={{ n }}">收藏</a>
+
             </div>
             <div class="prod-number">
                 <a href="javascript:;">商品列表</a>
 				<span>></span>
-				<a href="javascript:;">所有商品</a>
-				<span>></span>
-				<a href="javascript:;">共300个商品</a>
+				<a href="javascript:;">共{{ commodityInfos|length }}件商品</a>
             </div>
             <div class="cont-list layui-clear" id="list-cont">
+              {% for p in pages.object_list %}
               <div class="item">
                 <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img1.jpg"></a>
+                  <a href="{% url 'commodity:detail' p.id %}">
+                  <img height="280" width="280" src="{{ p.img.url }}"></a>
                 </div>
                 <div class="text">
-                  <p class="title">森系小清新四件套</p>
+                  <p class="title">{{ p.name }}</p>
                   <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
+                    <span class="pri">￥{{ p.price|floatformat:'2' }}</span>
+                    <span class="nub">{{ p.sold }}付款</span>
                   </p>
                 </div>
               </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img2.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img3.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img1.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img2.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img3.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img1.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img2.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img3.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img1.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img2.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img3.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img1.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img2.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
-              <div class="item">
-                <div class="img">
-                  <a href="javascript:;"><img src="../pstatic/img/paging_img3.jpg"></a>
-                </div>
-                <div class="text">
-                  <p class="title">森系小清新四件套</p>
-                  <p class="price">
-                    <span class="pri">￥200</span>
-                    <span class="nub">1266付款</span>
-                  </p>
-                </div>
-              </div>
+              {% endfor %}
             </div>
           </div>
         </div>
-		<div id="demo0" style="text-align: center;"></div>
-      </div>
-    </div>
-  </div>
-<script>
+      <div id="demo0" style="text-align: center;">
+            <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-1">
+                {% if pages.has_previous %}
+                    <a href="{% url 'commodity:commodity' %}?t={{ t }}&s={{ s }}&n={{ n }}&p={{ pages.previous_page_number }}" class="layui-laypage-prev">上一页</a>
+                {% endif %}
 
+                {% for page in pages.paginator.page_range %}
+                    {% if pages.number == page %}
+                        <span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>{{ page }}</em></span>
+                    {% elif pages.number|add:'-1' == page or pages.number|add:'1' == page %}
+                        <a href="{% url 'commodity:commodity' %}?t={{ t }}&s={{ s }}&n={{ n }}&p={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pages.has_next %}
+                    <a href="{% url 'commodity:commodity' %}?t={{ t }}&s={{ s }}&n={{ n }}&p={{ pages.pages.next_page_number }}" class="layui-laypage-next">下一页</a>
+                {% endif %}
+            </div>
+      </div>
+	  </div>
+    </div>
+{% endblock content %}
+  
+{% block script %}
   layui.config({
-    base: '../pstatic/js/'
+    base: '{% static 'js/' %}'
   }).use(['mm','laypage','jquery'],function(){
       var laypage = layui.laypage,$ = layui.$,
-     mm = layui.mm;
-       laypage.render({
-        elem: 'demo0'
-        ,count: 100 //数据总数
-      });
-    $('.sort a').on('click',function(){
-      $(this).addClass('active').siblings().removeClass('active');
-    })
+      mm = layui.mm;
     $('.list-box dt').on('click',function(){
       if($(this).attr('off')){
         $(this).removeClass('active').siblings('dd').show()
@@ -312,8 +93,4 @@
     })
 
 });
-</script>
-
-
-</body>
-</html>
+{% endblock script %}

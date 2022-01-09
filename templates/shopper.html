@@ -1,82 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Document</title>
-  <link rel="stylesheet" type="text/css" href="../pstatic/css/main.css">
-  <link rel="stylesheet" type="text/css" href="../pstatic/layui/css/layui.css">
-  <script type="text/javascript" src="../pstatic/layui/layui.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-</head>
-<body>
-
-
-
-
-
-  <div class="header">
-    <div class="headerLayout w1200">
-      <div class="headerCon">
-        <h1 class="mallLogo">
-          <a href="#" title="母婴商城">
-            <img src="../pstatic/img/logo.png">
-          </a>
-        </h1>
-        <div class="mallSearch">
-          <form action="" class="layui-form" novalidate>
-            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-            <input type="hidden" name="" value="">
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="content content-nav-base information-content">
-    <div class="main-nav">
-      <div class="inner-cont0">
-        <div class="inner-cont1 w1200">
-          <div class="inner-cont2">
-            <a href="index.html" class="active">首页</a>
-			<a href="commodity.html" >所有商品</a>
-			<a href="shopcart.html" >购物车</a>
-            <a href="shopper.html">个人中心</a>
-          </div>
-        </div>
-      </div>
-    </div>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
     <div class="info-list-box">
       <div class="info-list">
         <div class="item-box layui-clear" id="list-cont">
           <div class="item">
             <div class="img">
-              <img src="../pstatic/img/portrait.png" alt="">
+              <img src="{% static 'img/portrait.png' %}">
             </div>
             <div class="text">
-              <h4>用户admin</h4>
-              <p class="data">登录时间：2016-12-24 16:33:26</p>
+              <h4>用户：{{ user.username }}</h4>
+              <p class="data">登录时间：{{ user.last_login }}</p>
 			  <div class="left-nav">
 				  <div class="title">
-					<a>我的购物车</a>
+					<a href="{% url 'shopper:shopcart' %}">我的购物车</a>
 				  </div>
+{#				  <div class="title">#}
+{#					<a>我的优惠卷</a>#}
+{#				  </div>#}
+{#				  <div class="title">#}
+{#					<a>收货地址</a>#}
+{#				  </div>#}
 				  <div class="title">
-					<a>我的优惠卷</a>
-				  </div>
-				  <div class="title">
-					<a>收货地址</a>
-				  </div>
-				  <div class="title">
-					<a>注销账号</a>
+					<a href="{% url 'shopper:logout' %}">退出登录</a>
 				  </div>
 			  </div>
             </div>
           </div>
-<div class="item1">
+    <div class="item1">
         
 		<div class="cart">
       <div class="cart-table-th">
@@ -104,59 +55,47 @@
       </div>
       <div class="OrderList">
         <div class="order-content" id="list-cont">
+          {% for p in pages.object_list %}
           <ul class="item-content layui-clear">
-            <li class="th th-item">
-				宝宝T恤棉质小衫
-            </li>
-            <li class="th th-price">
-				宝宝T恤棉质小衫
-            </li>
-			<li class="th th-amount">
-				宝宝T恤棉质小衫
-            </li>
-			<li class="th th-sum">
-				宝宝T恤棉质小衫
-            </li>
+            <li class="th th-item">{{ p.id }}</li>
+            <li class="th th-price">￥{{ p.price|floatformat:'2' }}</li>
+			<li class="th th-amount">{{ p.created }}</li>
+			<li class="th th-sum">{{ p.state }}</li>
           </ul>
-          <ul class="item-content layui-clear">
-            <li class="th th-item">
-				宝宝T恤棉质小衫
-            </li>
-            <li class="th th-price">
-				宝宝T恤棉质小衫
-            </li>
-			<li class="th th-amount">
-				宝宝T恤棉质小衫
-            </li>
-			<li class="th th-sum">
-				宝宝T恤棉质小衫
-            </li>
-          </ul>
-         
+          {% endfor %}
         </div>
       </div>
 
-    </div>
-</div>
 		</div>
-        </div>
-        <div id="demo0" style="text-align: center;"></div>
+		</div>
+	</div>
+	</div>
+      <div id="demo0" style="text-align: center;">
+            <div class="layui-box layui-laypage layui-laypage-default" id="layui-laypage-1">
+                {% if pages.has_previous %}
+                    <a href="{% url 'shopper:shopper' %}?p={{ pages.previous_page_number }}" class="layui-laypage-prev">上一页</a>
+                {% endif %}
+
+                {% for page in pages.paginator.page_range %}
+                    {% if pages.number == page %}
+                        <span class="layui-laypage-curr"><em class="layui-laypage-em"></em><em>{{ page }}</em></span>
+                    {% elif pages.number|add:'-1' == page or pages.number|add:'1' == page %}
+                        <a href="{% url 'shopper:shopper' %}?p={{ page }}">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pages.has_next %}
+                    <a href="{% url 'shopper:shopper' %}?p={{ pages.pages.next_page_number }}" class="layui-laypage-next">下一页</a>
+                {% endif %}
+            </div>
       </div>
-    </div>
   </div>
-<script>
+{% endblock content %}
+  
+{% block script %}
   layui.config({
-    base: '../pstatic/js/' 
+    base: '{% static 'js/' %}'
   }).use(['mm','laypage'],function(){
-      var
-      mm = layui.mm,laypage = layui.laypage;
-      laypage.render({
-        elem: 'demo0'
-        ,count: 100
-      }); 
+      var mm = layui.mm,laypage = layui.laypage;
 });
-
-</script>
-
-</body>
-</html>
+{% endblock script %}

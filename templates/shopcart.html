@@ -1,51 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Document</title>
-  <link rel="stylesheet" type="text/css" href="../pstatic/css/main.css">
-  <link rel="stylesheet" type="text/css" href="../pstatic/layui/css/layui.css">
-  <script type="text/javascript" src="../pstatic/layui/layui.js"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-</head>
-<body>
-
-  <div class="header">
-    <div class="headerLayout w1200">
-      <div class="headerCon">
-        <h1 class="mallLogo">
-          <a href="#" title="母婴商城">
-            <img src="../pstatic/img/logo.png">
-          </a>
-        </h1>
-        <div class="mallSearch">
-          <form action="" class="layui-form" novalidate>
-            <input type="text" name="title" required  lay-verify="required" autocomplete="off" class="layui-input" placeholder="请输入需要的商品">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">
-                <i class="layui-icon layui-icon-search"></i>
-            </button>
-            <input type="hidden" name="" value="">
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="content content-nav-base shopcart-content">
-    <div class="main-nav">
-      <div class="inner-cont0">
-        <div class="inner-cont1 w1200">
-          <div class="inner-cont2">
-            <a href="index.html" class="active">首页</a>
-			<a href="commodity.html" >所有商品</a>
-			<a href="shopcart.html" >购物车</a>
-            <a href="shopper.html">个人中心</a>
-          </div>
-        </div>
-      </div>
-    </div>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
     <div class="banner-bg w1200">
       <h3>夏季清仓</h3>
       <p>宝宝被子、宝宝衣服3折起</p>
@@ -88,6 +43,9 @@
       </div>
       <div class="OrderList">
         <div class="order-content" id="list-cont">
+
+
+        {% for c in commodityInfos %}
           <ul class="item-content layui-clear">
             <li class="th th-chk">
               <div class="select-all">
@@ -98,98 +56,38 @@
             </li>
             <li class="th th-item">
               <div class="item-cont">
-                <a href="javascript:;"><img src="../pstatic/img/paging_img1.jpg" alt=""></a>
+                <a href="javascript:;"><img src="{{ c.img.url }}" alt=""></a>
                 <div class="text">
-                  <div class="title">宝宝T恤棉质小衫</div>
-                  <p><span>粉色</span>  <span>130</span>cm</p>
+                  <div class="title">{{ c.name }}</div>
+                  <p><span>{{ c.sezes }}</span></p>
                 </div>
               </div>
             </li>
             <li class="th th-price">
-              <span class="th-su">189.00</span>
+              <span class="th-su">{{ c.price }}</span>
             </li>
             <li class="th th-amount">
               <div class="box-btn layui-clear">
                 <div class="less layui-btn">-</div>
-                <input class="Quantity-input" type="" name="" value="1" disabled="disabled">
+                  {% for k, v in commodityDcit.items %}
+                      {% if c.id == k %}
+                        <input class="Quantity-input" value="{{ v }}" disabled="disabled">
+                      {% endif %}
+                  {% endfor %}
                 <div class="add layui-btn">+</div>
               </div>
             </li>
             <li class="th th-sum">
-              <span class="sum">189.00</span>
+              <span class="sum">0</span>
             </li>
             <li class="th th-op">
               <span class="dele-btn">删除</span>
+              <p hidden="hidden">{{ c.id }}</p>
             </li>
           </ul>
-          <ul class="item-content layui-clear">
-            <li class="th th-chk">
-              <div class="select-all">
-                <div class="cart-checkbox">
-                  <input class="CheckBoxShop check" id="" type="checkbox" num="all" name="select-all" value="true">
-                </div>
-              </div>
-            </li>
-            <li class="th th-item">
-              <div class="item-cont">
-                <a href="javascript:;"><img src="../pstatic/img/paging_img2.jpg" alt=""></a>
-                <div class="text">
-                  <div class="title">宝宝T恤棉质小衫</div>
-                  <p><span>粉色</span>  <span>130</span>cm</p>
-                </div>
-              </div>
-            </li>
-            <li class="th th-price">
-              <span class="th-su">189.00</span>
-            </li>
-            <li class="th th-amount">
-              <div class="box-btn layui-clear">
-                <div class="less layui-btn">-</div>
-                <input class="Quantity-input" type="" name="" value="1" disabled="disabled">
-                <div class="add layui-btn">+</div>
-              </div>
-            </li>
-            <li class="th th-sum">
-              <span class="sum">189.00</span>
-            </li>
-            <li class="th th-op">
-              <span class="dele-btn">删除</span>
-            </li>
-          </ul>
-          <ul class="item-content layui-clear">
-            <li class="th th-chk">
-              <div class="select-all">
-                <div class="cart-checkbox">
-                  <input class="CheckBoxShop check" id="" type="checkbox" num="all" name="select-all" value="true">
-                </div>
-              </div>
-            </li>
-            <li class="th th-item">
-              <div class="item-cont">
-                <a href="javascript:;"><img src="../pstatic/img/paging_img3.jpg" alt=""></a>
-                <div class="text">
-                  <div class="title">宝宝T恤棉质小衫</div>
-                  <p><span>粉色</span>  <span>130</span>cm</p>
-                </div>
-              </div>
-            </li>
-            <li class="th th-price">
-              <span class="th-su">189.00</span>
-            </li>
-            <li class="th th-amount">
-              <div class="box-btn layui-clear">
-                <div class="less layui-btn">-</div>
-                <input class="Quantity-input" type="" name="" value="1" disabled="disabled">
-                <div class="add layui-btn">+</div>
-              </div>
-            </li>
-            <li class="th th-sum">
-              <span class="sum">189.00</span>
-            </li>
-            <li class="th th-op">
-              <span class="dele-btn">删除</span>
-            </li>
-          </ul>
+          {% endfor %}
+
+
         </div>
       </div>
       <div class="FloatBarHolder layui-clear">
@@ -203,24 +101,40 @@
         </div>
         <div class="th batch-deletion">
           <span class="batch-dele-btn">批量删除</span>
+          <p hidden="hidden" id="userId">{{ request.user.id }}</p>
         </div>
         <div class="th Settlement">
-          <button class="layui-btn">结算</button>
+          <button class="layui-btn" id="settlement">结算</button>
         </div>
         <div class="th total">
           <p>应付：<span class="pieces-total">0</span></p>
         </div>
       </div>
     </div>
-  </div>
+{% endblock content %}
 
-<script type="text/javascript">
+{% block script %}
   layui.config({
-    base: '../pstatic/js/'
+    base: '{% static 'js/' %}'
   }).use(['mm','jquery','element','car'],function(){
     var mm = layui.mm,$ = layui.$,element = layui.element,car = layui.car;
-    car.init()
+    car.init();
+
+    $(function(){
+    var counts = 0;
+	$(".sum").each(function(i,e){
+	  var quantity = $('.th-su')[i].innerHTML
+      var price = $('.Quantity-input')[i].value
+      e.innerHTML = (quantity * price).toFixed(2)
+      counts = counts*1 + e.innerHTML*1
+	});
+    $(".pieces-total").text("￥" + counts.toFixed(2))
+    });
+
+    $("#settlement").on('click',function(){
+        var total = $(".pieces-total").text()
+        window.location = "{% url 'shopper:shopper' %}?total=" + total
+    })
 });
-</script>
-</body>
-</html>
+
+{% endblock script %}
