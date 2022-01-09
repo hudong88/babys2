@@ -100,8 +100,8 @@
           </div>
         </div>
         <div class="th batch-deletion">
-          <span class="batch-dele-btn">批量删除</span>
-          <p hidden="hidden" id="userId">{{ request.user.id }}</p>
+          <span class="batch-dele-btn">删除全部</span>
+          <p hidden="hidden" id="userId">{{ user.id }}</p>
         </div>
         <div class="th Settlement">
           <button class="layui-btn" id="settlement">结算</button>
@@ -133,7 +133,7 @@
 
     $("#settlement").on('click',function(){
         var total = $(".pieces-total").text()
-        window.location = "{% url 'shopper:shopper' %}?total=" + total
+        window.location = "{% url 'shopper:pays' %}?total=" + total
     })
 });
 
