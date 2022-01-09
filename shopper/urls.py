@@ -13,16 +13,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include, re_path
-from django.views.static import serve
-from django.conf import settings
+
+from django.urls import path
+from .views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include(('index.urls', 'index'), namespace='index')),
-    path('commodity', include(('commodity.urls', 'commodity'), namespace='commodity')),
-    path('shopper', include(('shopper.urls', 'shopper'), namespace='shopper')),
-    # 配置媒体资源的路由信息
-    re_path('media/(?P<path>.*)', serve, {'document_root':settings.MEDIA_ROOT}, name='media'),
+    path('.html', shopperView, name='shopper'),
+    path('/login.html', loginView, name='login'),
+    path('/logout.html', logoutView, name='logout'),
+    path('/shopcart.html', shopcartView, name='shopcart'),
 ]
